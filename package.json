@@ -1,0 +1,36 @@
+{
+    "name": "dummy",
+    "title": "deviantART dummy jQuery plugin",
+    "description": "jQuery plugin.",
+    "keywords": [
+    ],
+    "version": "1.0.0",
+    "author": {
+        "name": "deviantART, Inc",
+        "url": "http://www.deviantart.com/"
+    },
+    "maintainers": [
+        {
+            "name": "deviantART, Inc",
+            "url": "http://www.deviantart.com/"
+        }
+    ],
+    "contributors": [ 
+        {
+            "name": "Woody Gilk",
+            "email": "woody.gilk@gmail.com"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "BSD-3-Clause",
+            "url": "https://github.com/deviantART/jquery.dummy/blob/master/LICENSES.txt"
+        }
+    ],
+    "bugs": "https://github.com/deviantART/jquery.dummy/issues",
+    "homepage": "http://deviantart.github.com/jquery.dummy/",
+    "docs": "https://github.com/deviantART/jquery.dummy/wiki",
+    "dependencies": {
+        "jquery": ">=1.7"
+    }
+}
