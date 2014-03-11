@@ -108,10 +108,6 @@
      * - toggle-class: toggle one or more classes (complex, banged)
      * - clone: copy the node before updating (only valid for the template node)
      *
-     * NOTE: When using a GMI node as a template with the "clone" option,
-     *       all of the GMI attributes will be purged from the cloned node.
-     *       This is done to prevent ambiguous GMI instances/bindings.
-     *
      * Complex syntax is "x:key" where "x" is used for part of the update action
      * and "key" is the JSON key name. For instance, using the "attr" option could
      * be "href:userurl" to set the "href" to the value of the "userurl" key.
@@ -144,9 +140,6 @@
             $root = this.clone();
             if ($root.attr('id')) {
                 $root.attr('id', '');
-            }
-            if ($root.is(':gmi')) {
-                $root.gmiPurge();
             }
             $root.insertAfter(this);
         }
