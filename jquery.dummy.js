@@ -111,6 +111,10 @@
      * - clone: copy the node before updating (only valid for the template node)
      * - each: loop over this node using an array of objects
      *
+     * NOTE: Cloned nodes will automatically have the "id" attribute stripped.
+     *       To perform additional modifications to cloned nodes, you can monkey
+     *       patch the $.fn.dummyCloned method to make additional changes.
+     *
      * Complex syntax is "x:key" where "x" is used for part of the update action
      * and "key" is the JSON key name. For instance, using the "attr" option could
      * be "href:userurl" to set the "href" to the value of the "userurl" key.
@@ -174,11 +178,7 @@
             ,is_each = Boolean($root.data(DATA_PREFIX + '-each') && $root.data(DATA_PREFIX + '-in-loop') >= 1);
 
         if ($root.data(DATA_PREFIX + '-clone') || is_each) {
-            $root = this.clone();
-            if ($root.attr('id')) {
-                $root.attr('id', '');
-            }
-            $root.insertAfter(this);
+            $root = this.clone().dummyCloned().insertAfter(this);
         }
 
         var $nodes = $root.find(':dummy').filter(function() {
@@ -271,6 +271,13 @@
                 }
             }
         });
+        return $root;
+    };
+    $.fn.dummyCloned = function() {
+        if (typeof this.attr('id') !== 'undefined') {
+            this.removeAttr('id');
+        }
+        return this;
     };
 
 })(jQuery);
