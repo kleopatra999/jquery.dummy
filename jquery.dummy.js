@@ -19,9 +19,11 @@
             ,'toggleClass': 'data-' + DATA_PREFIX + '-toggle-class'
             ,'clone':       'data-' + DATA_PREFIX + '-clone'
             ,'plural':      'data-' + DATA_PREFIX + '-plural'
+            ,'each':        'data-' + DATA_PREFIX + '-each'
         }
         ,DATA_IGNORE = [ // not returned with dummy data
-            DATA_PREFIX + 'Clone'
+             DATA_PREFIX + 'Clone'
+            ,DATA_PREFIX + 'InLoop'
         ]
         ,get_dummy_data = function($node) {
             var all_data = $node.data()
@@ -134,16 +136,27 @@
      *   <div data-dummy-add-class="cold:winter,hot:!winter"><!-- class is "cold" in winter, "hot" in summer -->
      *
      */
-    $.fn.dummy = function(data) {
-        var $root = this;
-        if ($root.data(DATA_PREFIX + '-clone')) {
+    $.fn.dummy = function(data, excludeSelf) {
+        var $root = this
+            ,is_each = Boolean($root.data(DATA_PREFIX + '-each') && $root.data(DATA_PREFIX + '-in-loop') >= 1);
+
+        if ($root.data(DATA_PREFIX + '-clone') || is_each) {
             $root = this.clone();
             if ($root.attr('id')) {
                 $root.attr('id', '');
             }
             $root.insertAfter(this);
         }
-        var $nodes = $root.find(':dummy').addBack(':dummy');
+
+        var $nodes = $root.find(':dummy').filter(function() {
+            // filter out all dummy nodes that are inside of "each" blocks,
+            // as they must be contextualized before the keys will match up.
+            return $(this).parentsUntil($root, ':dummy(each)').length === 0;
+        });
+
+        if (excludeSelf !== true) {
+            $nodes = $nodes.add($root.filter(':dummy'));
+        }
 
         $nodes.each(function() {
             var $node = $(this)
@@ -156,6 +169,13 @@
             for (var edit in editables) {
                 key = editables[edit];
                 switch (edit) {
+                    case 'each':
+                        if (data[key] && $.isArray(data[key])) {
+                            $.each(data[key], function(i, subdata) {
+                                $node.data(DATA_PREFIX + '-in-loop', i).dummy(subdata, true);
+                            });
+                        }
+                    break;
                     case 'plural':
                         keys = key.split(':');
                         key = keys[0];
