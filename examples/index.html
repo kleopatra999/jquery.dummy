@@ -1,15 +1,160 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Dummy jQuery plugin example</title>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="../jquery.dummy.js"></script>
-<style>
-</style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>jQuery.Dummy Example</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../jquery.dummy.js"></script>
+
+    <style type="text/css">
+    h1 {
+        position: relative;
+    }
+    h1 small {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: 50%;
+    }
+    table.benchmarks tr th,
+    table.benchmarks tr td {
+        text-align: right;
+    }
+    table.benchmarks tr th.name,
+    table.benchmarks tr td.name {
+        text-align: left;
+        vertical-align: top;
+        width: 40%;
+    }
+    div.group span.time:after {
+        content: " s";
+        opacity: 0.5;
+    }
+    div.group span.memory:after {
+        content: " Kb";
+        opacity: 0.5;
+    }
+        
+    form {
+        text-align: right;
+    }
+    form textarea {
+        width: 100%;
+        height: 36em;
+        resize: vertical;
+    }
+    </style>
 </head>
 <body>
-<h1>TODO</h1>
-<p>Blah blah.</p>
+<div class="container">
+
+<div class="profiler" data-dummy-clone="true">
+	<div class="group" data-dummy-each="groups">
+		<h1><span data-dummy-text="group">jQuery.Dummy Example</span>
+            <small><span class="time" data-dummy-text="total-time">0.36</span> <span class="memory" data-dummy-text="total-memory">41.2</span></small></h1>
+        <table class="benchmarks table table-striped table-bordered">
+            <thead>
+                <tr class="group help">
+                    <th class="name">Benchmark</th>
+                    <th class="min">Min</th>
+                    <th class="max">Max</th>
+                    <th class="avg">Average</th>
+                    <th class="total">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="group" data-dummy-each="benchmarks">
+                    <td class="name" data-dummy-text="benchmark">Example</td>
+                    <td class="min">
+                        <span class="time" data-dummy-text="min-time">0.2</span>
+                        <span class="memory" data-dummy-text="min-memory">36</span>
+                    </td>
+                    <td class="max">
+                        <span class="time" data-dummy-text="max-time">0.6</span>
+                        <span class="memory" data-dummy-text="max-memory">94</span>
+                    </td>
+                    <td class="avg">
+                        <span class="time" data-dummy-text="avg-time">0.4</span>
+                        <span class="memory" data-dummy-text="avg-memory">38</span>
+                    </td>
+                    <td class="total">
+                        <span class="time" data-dummy-text="total-time">0.36</span>
+                        <span class="memory" data-dummy-text="total-memory">41.2</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+	</div>
+</div>
+
+<hr>
+
+<h1>Try it!</h1>
+<form id="dummy">
+    <fieldset>
+        <textarea name="data" cols="80" rows="45">
+{
+    &quot;groups&quot;: [
+        {
+            &quot;group&quot;: &quot;Website Benchmarks&quot;,
+            &quot;total-time&quot;: 1.451,
+            &quot;total-memory&quot;: 445.3,
+            &quot;benchmarks&quot;: [
+                {
+                    &quot;benchmark&quot;: &quot;Database Query&quot;,
+                    &quot;min-time&quot;: 0.5,
+                    &quot;min-memory&quot;: 182,
+                    &quot;max-time&quot;: 1.2,
+                    &quot;max-memory&quot;: 963,
+                    &quot;avg-time&quot;: 0.8,
+                    &quot;avg-memory&quot;: 221,
+                    &quot;total-time&quot;: 0.781,
+                    &quot;total-memory&quot;: 356.1
+                },
+                {
+                    &quot;benchmark&quot;: &quot;Form Builder&quot;,
+                    &quot;min-time&quot;: 0.3,
+                    &quot;min-memory&quot;: 36,
+                    &quot;max-time&quot;: 0.6,
+                    &quot;max-memory&quot;: 94,
+                    &quot;avg-time&quot;: 0.4,
+                    &quot;avg-memory&quot;: 38,
+                    &quot;total-time&quot;: 0.67,
+                    &quot;total-memory&quot;: 89.2
+                }
+            ]
+        }
+    ]
+}
+        </textarea><br/>
+        <label><input type="checkbox" name="clean" value="1" checked> Remove existing data</label>
+    </fieldset>
+    <p><button type="submit">Update</button></p>
+</form>
+
+</div>
+<script>
+$(document).ready(function()
+{
+    $('form#dummy').on('submit', function(event) {
+        event.preventDefault();
+        var data = $('textarea', this).val()
+            ,clean = $(':checkbox', this).prop('checked');
+        try {
+            data = JSON.parse(data);
+        } catch (err) {
+            console.warn('unable to parse json', err);
+        }
+        if (clean) {
+            $('div.profiler:not(:first)').remove();
+        }
+        $('div.profiler:first').dummy(data);
+    })
+    .trigger('submit');
+});
+</script>
 </body>
 </html>
-<script src="example.js"></script>
