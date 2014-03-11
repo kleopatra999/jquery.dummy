@@ -21,7 +21,7 @@
             ,'plural':      'data-' + DATA_PREFIX + '-plural'
         }
         ,DATA_IGNORE = [ // not returned with dummy data
-            DATA_PREFIX + '-clone'
+            DATA_PREFIX + 'Clone'
         ]
         ,get_dummy_data = function($node) {
             var all_data = $node.data()
