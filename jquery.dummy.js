@@ -109,6 +109,7 @@
      * - remove-class: remove one or more classes (complex, banged)
      * - toggle-class: toggle one or more classes (complex, banged)
      * - clone: copy the node before updating (only valid for the template node)
+     * - each: loop over this node using an array of objects
      *
      * Complex syntax is "x:key" where "x" is used for part of the update action
      * and "key" is the JSON key name. For instance, using the "attr" option could
@@ -135,6 +136,38 @@
      *
      *   <div data-dummy-add-class="cold:winter,hot:!winter"><!-- class is "cold" in winter, "hot" in summer -->
      *
+     * Looping using the "each" attribute works like this:
+     *
+     * <div class="user" data-dummy-each="users">
+     *     <a href data-dummy-attr="href:profile" data-dummy-text="username"></a>
+     *     <img src data-dummy-attr="src:avatar">
+     * </div>
+     *
+     * Updated with this JSON:
+     *
+     * {"users":[
+     *     {"profile": "//example.com/user/joe", "username": "joe", "avatar": "//example.com/avatar/joe.gif"},
+     *     {"profile": "//example.com/user/bob", "username": "bub", "avatar": "//example.com/avatar/bob.png"},
+     *     {"profile": "//example.com/user/sue", "username": "sus", "avatar": "//example.com/avatar/susie.jpg"}
+     * ]}
+     *
+     * Would produce this HTML (dummy attributes removed for clarity):
+     *
+     * <div class="user">
+     *     <a href="//example.com/user/joe">joe</a>
+     *     <img src="//example.com/avatar/joe.gif">
+     * </div>
+     * <div class="user" data-dummy-each="users">
+     *     <a href="//example.com/user/bob">bub</a>
+     *     <img src="//example.com/avatar/bob.png">
+     * </div>
+     * <div class="user">
+     *     <a href="//example.com/user/sue">sus</a>
+     *     <img src="//example.com/avatar/susie.jpg">
+     * </div>
+     *
+     * By using "each", lists of data can be easily rendered. Using "each" implies
+     * that the initial node will be cloned to produce similar nodes.
      */
     $.fn.dummy = function(data, excludeSelf) {
         var $root = this
